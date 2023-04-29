@@ -31,5 +31,7 @@ RUN airflow users create \
 
 RUN git clone https://github.com/ndominutti/SysDesign_OnlineRecommendationEngine.git
 
+RUN cp -r SysDesign_OnlineRecommendationEngine/dags airflow/
+
 EXPOSE 8000
 
