@@ -14,11 +14,5 @@ class Topctr():
 
         return CTR_index.groupby(['advertiser_id']).head(20)
 
-    
-if __name__ == "__main__":
-    data = s3.get_data(bucket_name="ads-recommender-system", file_path="/airflow_subprocess_data/ctr_process_data.csv")
-    
-    topctr = Topctr(data)
-    data = topctr.top_20()
-    
-    s3.post_data(bucket_name="ads-recommender-system", file_path="/airflow_subprocess_data/topctr_data.csv", data = data)
+    def __call__(self):
+        return self.top_20()
