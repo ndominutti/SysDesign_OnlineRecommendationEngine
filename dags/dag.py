@@ -80,7 +80,7 @@ with DAG(
     with TaskGroup(group_id="upload") as group3:
         upload1 = PythonOperator(
             task_id="SubirDatos",
-            python_callable=dagsUtils.post_data,
+            python_callable=S3utils.post_data,
             op_kwargs={
                 "bucket_name": "ad-recommender-system",
                 "file_path": "/airflow_subprocess_data/advertiser.csv",
@@ -89,7 +89,7 @@ with DAG(
         )
         upload2 = PythonOperator(
             task_id="SubirDatos2",
-            python_callable=dagsUtils.post_data,
+            python_callable=S3utils.post_data,
             op_kwargs={
                 "bucket_name": "ad-recommender-system",
                 "file_path": "/airflow_subprocess_data/products.csv",
@@ -100,7 +100,7 @@ with DAG(
     with TaskGroup(group_id="download2") as group4:
         download4 = PythonOperator(
             task_id="DownloadData4",
-            python_callable=dagsUtils.get_data,
+            python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ad-recommender-system",
                 "file_path": "/airflow_subprocess_data/advertiser.csv",
@@ -108,7 +108,7 @@ with DAG(
         )
         download5 = PythonOperator(
             task_id="DownloadData5",
-            python_callable=dagsUtils.get_data,
+            python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ad-recommender-system",
                 "file_path": "/airflow_subprocess_data/products.csv",
