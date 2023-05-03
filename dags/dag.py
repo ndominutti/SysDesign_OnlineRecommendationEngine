@@ -40,7 +40,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/input_data/ads_views.csv",
+                "file_path": "input_data/ads_views.csv",
             },
         )
 
@@ -49,7 +49,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/input_data/product_views.csv",
+                "file_path": "input_data/product_views.csv",
             },
         )
 
@@ -58,7 +58,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/input_data/advertiser_id.csv",
+                "file_path": "input_data/advertiser_id.csv",
             },
         )
 
@@ -83,7 +83,7 @@ with DAG(
             python_callable=S3utils.post_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/airflow_subprocess_data/advertiser.csv",
+                "file_path": "airflow_subprocess_data/advertiser.csv",
                 "data": filter_data1,
             },
         )
@@ -92,7 +92,7 @@ with DAG(
             python_callable=S3utils.post_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/airflow_subprocess_data/products.csv",
+                "file_path": "airflow_subprocess_data/products.csv",
                 "data": filter_data2,
             },
         )
@@ -103,7 +103,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/airflow_subprocess_data/advertiser.csv",
+                "file_path": "airflow_subprocess_data/advertiser.csv",
             },
         )
         download5 = PythonOperator(
@@ -111,7 +111,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "/airflow_subprocess_data/products.csv",
+                "file_path": "airflow_subprocess_data/products.csv",
             },
         )
 
