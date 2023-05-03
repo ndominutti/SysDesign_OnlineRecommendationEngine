@@ -58,7 +58,7 @@ with DAG(
             python_callable=S3utils.get_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "input_data/advertiser_id.csv",
+                "file_path": "input_data/advertiser_ids.csv",
             },
         )
 
