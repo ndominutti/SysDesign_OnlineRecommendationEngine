@@ -39,8 +39,8 @@ with DAG(
             task_id="DownloadData",
             python_callable=S3utils.get_data,
             op_kwargs={
-                bucket_name: "ad-recommender-system",
-                file_path: "/input_data/ads_views.csv",
+                "bucket_name": "ad-recommender-system",
+                "file_path": "/input_data/ads_views.csv",
             },
         )
 
@@ -48,8 +48,8 @@ with DAG(
             task_id="DownloadData2",
             python_callable=S3utils.get_data,
             op_kwargs={
-                bucket_name: "ad-recommender-system",
-                file_path: "/input_data/product_views.csv",
+                "bucket_name": "ad-recommender-system",
+                "file_path": "/input_data/product_views.csv",
             },
         )
 
@@ -57,8 +57,8 @@ with DAG(
             task_id="DownloadData3",
             python_callable=S3utils.get_data,
             op_kwargs={
-                bucket_name: "ad-recommender-system",
-                file_path: "/input_data/advertiser_id.csv",
+                "bucket_name": "ad-recommender-system",
+                "file_path": "/input_data/advertiser_id.csv",
             },
         )
 
