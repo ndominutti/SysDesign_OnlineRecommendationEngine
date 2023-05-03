@@ -1,5 +1,5 @@
 import pandas as pd
-import S3utils as s3
+from . import S3utils as s3
 
 class Topproduct():
     def __init__(self, data):
