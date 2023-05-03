@@ -12,10 +12,10 @@ from airflow.operators.dummy import DummyOperator
 from airflow.utils.task_group import TaskGroup
 
 
-import dagUtils
-import S3utils
-from topproduct import Topproduct
-from topctr import Topctr
+from src import dagsUtils
+from src import S3utils
+from src.topproduct import Topproduct
+from src.topctr import Topctr
 
 # # Obtener la fecha actual
 # today = datetime.now()
