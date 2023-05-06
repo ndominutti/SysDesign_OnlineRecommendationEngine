@@ -1,4 +1,5 @@
 import psycopg2
+import sys
 
 if __name__ == "__main__":
     engine = psycopg2.connect(
@@ -10,7 +11,7 @@ if __name__ == "__main__":
     )
 
     cursor = engine.cursor()
-    cursor.execute("""SELECT * FROM LATEST_PRODUCT_RECOMMENDATION""")
+    cursor.execute(f"""SELECT * FROM {sys.argv[0]}""")
     rows = cursor.fetchall()
     for row in rows:
         print(row)
