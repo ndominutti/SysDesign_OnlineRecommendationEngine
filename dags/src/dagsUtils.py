@@ -41,7 +41,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
             cursor.execute(
                 """INSERT INTO table_name (ADVERTISER, PRODUCT, DATE) 
                                                     VALUES (%s, %s, %s)""",
-                (row["ADVERTISER"], row["PRODUCT"], row["DATE"]),
+                (row["advertiser_id"], row["product_id"], row["date"]),
             )
 
     engine.commit()
