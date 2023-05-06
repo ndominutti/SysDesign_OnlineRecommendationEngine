@@ -34,95 +34,50 @@ with DAG(
     start_date=datetime(2023, 4, 29),
     catchup=False,
 ) as dag:
-    with TaskGroup(group_id="download") as group1:
-        download_data = PythonOperator(
-            task_id="DownloadData",
-            python_callable=S3utils.get_data,
+    with TaskGroup(group_id="filter_data") as FilterJob:
+        FilterAdvertiserData = PythonOperator(
+            task_id="AdvertiserData",
+            python_callable=dagsUtils.filter_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "input_data/ads_views.csv",
+                "raw_file_path": "input_data/ads_views.csv",
+                "act_adv_file_path": "input_data/advertiser_ids.csv",
+                "output_file_path": "airflow_subprocess_data/curated_ads_views.csv",
             },
         )
 
-        download_data2 = PythonOperator(
-            task_id="DownloadData2",
-            python_callable=S3utils.get_data,
+        FilterProductData = PythonOperator(
+            task_id="ProductData",
+            python_callable=dagsUtils.filter_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "file_path": "input_data/product_views.csv",
+                "raw_file_path": "input_data/product_views.csv",
+                "act_adv_file_path": "input_data/advertiser_ids.csv",
+                "output_file_path": "airflow_subprocess_data/curated_product_views.csv",
             },
         )
 
-        download_data3 = PythonOperator(
-            task_id="DownloadData3",
-            python_callable=S3utils.get_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "file_path": "input_data/advertiser_ids.csv",
-            },
-        )
-
-    with TaskGroup(group_id="filter") as group2:
-        filter_data1 = PythonOperator(
-            task_id="FiltrarDatos",
-            python_callable=dagsUtils.filtrar_advertiser,
-            op_kwargs={"raw_data": download_data, "active_advertisers": download_data3},
-        )
-
-        filter_data2 = PythonOperator(
-            task_id="FiltrarDatos2",
-            python_callable=dagsUtils.filtrar_advertiser,
-            op_kwargs={
-                "raw_data": download_data2,
-                "active_advertisers": download_data3,
-            },
-        )
-    with TaskGroup(group_id="upload") as group3:
-        upload1 = PythonOperator(
-            task_id="SubirDatos",
-            python_callable=S3utils.post_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "file_path": "airflow_subprocess_data/advertiser.csv",
-                "data": filter_data1,
-            },
-        )
-        upload2 = PythonOperator(
-            task_id="SubirDatos2",
-            python_callable=S3utils.post_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "file_path": "airflow_subprocess_data/products.csv",
-                "data": filter_data2,
-            },
-        )
-
-    with TaskGroup(group_id="download2") as group4:
-        download4 = PythonOperator(
-            task_id="DownloadData4",
-            python_callable=S3utils.get_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "file_path": "airflow_subprocess_data/advertiser.csv",
-            },
-        )
-        download5 = PythonOperator(
-            task_id="DownloadData5",
-            python_callable=S3utils.get_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "file_path": "airflow_subprocess_data/products.csv",
-            },
-        )
-
-    with TaskGroup(group_id="models") as group5:
+    with TaskGroup(group_id="TrainJob") as TrainingJob:
         topproduct = PythonOperator(
             task_id="Topproduct",
-            python_callable=Topproduct,
-            op_kwargs={"data": download5},
+            python_callable=dagsUtils.train_job,
+            op_kwargs={
+                "model": Topproduct,
+                "bucket_name": "ads-recommender-system",
+                "curated_data_file_path": "airflow_subprocess_data/curated_product_views.csv",
+                "output_file_path": "airflow_subprocess_data/top_20_products.csv",
+            },
         )
+
         topctr = PythonOperator(
-            task_id="TopCTR", python_callable=Topctr, op_kwargs={"data": download4}
+            task_id="TopCTR",
+            python_callable=dagsUtils.train_job,
+            op_kwargs={
+                "model": Topctr,
+                "bucket_name": "ads-recommender-system",
+                "curated_data_file_path": "airflow_subprocess_data/curated_ads_views.csv",
+                "output_file_path": "airflow_subprocess_data/top_20_ctr.csv",
+            },
         )
 
     # with TaskGroup(group_id = "DBWriting") as group6:
@@ -139,8 +94,5 @@ with DAG(
     #                                         'file_path':"/airflow_subprocess_data/products.csv",
     #                                         'data':filter_data2})
 
-    group1 >> group2
-    group2 >> group3
-    group3 >> group4
-    group4 >> group5
+    FilterJob >> TrainingJob
     # group5 >> group6
