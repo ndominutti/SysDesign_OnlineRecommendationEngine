@@ -1,0 +1,11 @@
+FROM python:3.9-slim-bullseye
+
+WORKDIR /home
+RUN mkdir app
+RUN pip install -r requirements.txt
+RUN git clone https://github.com/ndominutti/SysDesign_OnlineRecommendationEngine.git
+
+RUN cp -r .SysDesign_OnlineRecommendationEngine/app ./app
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
