@@ -40,7 +40,7 @@ with DAG(
             python_callable=dagsUtils.filter_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "raw_file_path": "input_data/ads_views.csv",
+                "raw_data_file_path": "input_data/ads_views.csv",
                 "act_adv_file_path": "input_data/advertiser_ids.csv",
                 "output_file_path": "airflow_subprocess_data/curated_ads_views.csv",
             },
@@ -51,7 +51,7 @@ with DAG(
             python_callable=dagsUtils.filter_data,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "raw_file_path": "input_data/product_views.csv",
+                "raw_data_file_path": "input_data/product_views.csv",
                 "act_adv_file_path": "input_data/advertiser_ids.csv",
                 "output_file_path": "airflow_subprocess_data/curated_product_views.csv",
             },
