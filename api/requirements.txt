@@ -1,1 +1,3 @@
 fastapi==0.94.0
+pandas
+psycopg2
