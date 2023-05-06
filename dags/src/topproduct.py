@@ -8,7 +8,11 @@ class Topproduct:
 
     def top_20(self):
         self.data = (
-            self.data.groupby(["advertiser_id", "product_id"]).count().reset_index()
+            self.data.groupby(["advertiser_id", "product_id"])
+            .size()
+            .reset_index(name="event_count")
         )
-        self.data = self.data.sort_values(["advertiser_id", "date"], ascending=False)
+        self.data = self.data.sort_values(
+            ["advertiser_id", "event_count"], ascending=False
+        )
         return self.data.groupby("advertiser_id").head(20)
