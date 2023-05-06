@@ -39,7 +39,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
         cursor.execute("""TRUNCATE TABLE LATEST_PRODUCT_RECOMMENDATION;""")
         for index, row in recommendation.iterrows():
             cursor.execute(
-                """INSERT INTO LATEST_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, DATE) 
+                """INSERT INTO LATEST_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, EVENT_COUNT) 
                                                     VALUES (%s, %s, %s)""",
                 (row["advertiser_id"], row["product_id"], row["event_count"]),
             )
