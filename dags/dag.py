@@ -96,7 +96,7 @@ with DAG(
             python_callable=dagsUtils.write_rds,
             op_kwargs={
                 "bucket_name": "ads-recommender-system",
-                "recommendation_file_path": "airflow_subprocess_data/top_20_products.csv",
+                "recommendation_file_path": "airflow_subprocess_data/top_20_ctr.csv",
                 "model_type": "ctr",
             },
         )
