@@ -33,7 +33,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS LATEST_PRODUCT_RECOMMENDATION (ADVERTISER VARCHAR(50),
                                                                                     PRODUCT VARCHAR(50),
-                                                                                    DATE TIMESTAMP,
+                                                                                    EVENT_COUNT integer,
                                                                                     PRIMARY KEY (ADVERTISER, PRODUCT));"""
         )
         cursor.execute("""TRUNCATE TABLE LATEST_PRODUCT_RECOMMENDATION;""")
