@@ -17,4 +17,6 @@ class Topctr:
             by=["advertiser_id", "clicked"], ascending=False
         )
 
+        CTR_index = CTR_index.rename(columns={"clicked": "CTR"})
+
         return CTR_index.groupby(["advertiser_id"]).head(20)

@@ -18,6 +18,10 @@ def train_job(model, bucket_name, curated_data_file_path, output_file_path):
 
 
 def write_rds(bucket_name, recommendation_file_path, model_type):
+    assert model_type in [
+        "products",
+        "ctr",
+    ], 'model_type can only recieve "products" or "ctr"'
     recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
 
     engine = psycopg2.connect(
@@ -42,6 +46,20 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
                 """INSERT INTO LATEST_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, EVENT_COUNT) 
                                                     VALUES (%s, %s, %s)""",
                 (row["advertiser_id"], row["product_id"], row["event_count"]),
+            )
+    else:
+        cursor.execute(
+            """CREATE TABLE IF NOT EXISTS LATEST_ADVERTISERS_RECOMMENDATION (ADVERTISER VARCHAR(50),
+                                                                            PRODUCT VARCHAR(50),
+                                                                            CTR float8,
+                                                                            PRIMARY KEY (ADVERTISER, PRODUCT));"""
+        )
+        cursor.execute("""TRUNCATE TABLE LATEST_ADVERTISERS_RECOMMENDATION;""")
+        for index, row in recommendation.iterrows():
+            cursor.execute(
+                """INSERT INTO LATEST_ADVERTISERS_RECOMMENDATION (ADVERTISER, PRODUCT, CTR) 
+                                                    VALUES (%s, %s, %s)""",
+                (row["advertiser_id"], row["product_id"], row["CTR"]),
             )
 
     engine.commit()

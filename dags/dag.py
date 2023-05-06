@@ -91,4 +91,14 @@ with DAG(
             },
         )
 
+        topCTRDBWrite = PythonOperator(
+            task_id="TopCTRDBWrite",
+            python_callable=dagsUtils.write_rds,
+            op_kwargs={
+                "bucket_name": "ads-recommender-system",
+                "recommendation_file_path": "airflow_subprocess_data/top_20_products.csv",
+                "model_type": "ctr",
+            },
+        )
+
     FilterJob >> TrainingJob >> WriteJob
