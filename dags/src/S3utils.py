@@ -6,7 +6,7 @@ import pandas as pd
 def get_data(bucket_name, file_path):
     s3 = boto3.client("s3")
     obj = s3.get_object(Bucket=bucket_name, Key=file_path)
-    return pd.read_csv(obj["Body"]).to_dict()
+    return pd.read_csv(obj["Body"])
 
 
 def post_data(bucket_name, file_path, data):
