@@ -34,51 +34,51 @@ with DAG(
     start_date=datetime(2023, 4, 29),
     catchup=False,
 ) as dag:
-    with TaskGroup(group_id="filter_data") as FilterJob:
-        FilterAdvertiserData = PythonOperator(
-            task_id="AdvertiserData",
-            python_callable=dagsUtils.filter_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "raw_data_file_path": "input_data/ads_views.csv",
-                "act_adv_file_path": "input_data/advertiser_ids.csv",
-                "output_file_path": "airflow_subprocess_data/curated_ads_views.csv",
-            },
-        )
+    # with TaskGroup(group_id="filter_data") as FilterJob:
+    #     FilterAdvertiserData = PythonOperator(
+    #         task_id="AdvertiserData",
+    #         python_callable=dagsUtils.filter_data,
+    #         op_kwargs={
+    #             "bucket_name": "ads-recommender-system",
+    #             "raw_data_file_path": "input_data/ads_views.csv",
+    #             "act_adv_file_path": "input_data/advertiser_ids.csv",
+    #             "output_file_path": "airflow_subprocess_data/curated_ads_views.csv",
+    #         },
+    #     )
 
-        FilterProductData = PythonOperator(
-            task_id="ProductData",
-            python_callable=dagsUtils.filter_data,
-            op_kwargs={
-                "bucket_name": "ads-recommender-system",
-                "raw_data_file_path": "input_data/product_views.csv",
-                "act_adv_file_path": "input_data/advertiser_ids.csv",
-                "output_file_path": "airflow_subprocess_data/curated_product_views.csv",
-            },
-        )
+    #     FilterProductData = PythonOperator(
+    #         task_id="ProductData",
+    #         python_callable=dagsUtils.filter_data,
+    #         op_kwargs={
+    #             "bucket_name": "ads-recommender-system",
+    #             "raw_data_file_path": "input_data/product_views.csv",
+    #             "act_adv_file_path": "input_data/advertiser_ids.csv",
+    #             "output_file_path": "airflow_subprocess_data/curated_product_views.csv",
+    #         },
+    #     )
 
-    with TaskGroup(group_id="TrainJob") as TrainingJob:
-        topproduct = PythonOperator(
-            task_id="Topproduct",
-            python_callable=dagsUtils.train_job,
-            op_kwargs={
-                "model": Topproduct,
-                "bucket_name": "ads-recommender-system",
-                "curated_data_file_path": "airflow_subprocess_data/curated_product_views.csv",
-                "output_file_path": "airflow_subprocess_data/top_20_products.csv",
-            },
-        )
+    # with TaskGroup(group_id="TrainJob") as TrainingJob:
+    #     topproduct = PythonOperator(
+    #         task_id="Topproduct",
+    #         python_callable=dagsUtils.train_job,
+    #         op_kwargs={
+    #             "model": Topproduct,
+    #             "bucket_name": "ads-recommender-system",
+    #             "curated_data_file_path": "airflow_subprocess_data/curated_product_views.csv",
+    #             "output_file_path": "airflow_subprocess_data/top_20_products.csv",
+    #         },
+    #     )
 
-        topctr = PythonOperator(
-            task_id="TopCTR",
-            python_callable=dagsUtils.train_job,
-            op_kwargs={
-                "model": Topctr,
-                "bucket_name": "ads-recommender-system",
-                "curated_data_file_path": "airflow_subprocess_data/curated_ads_views.csv",
-                "output_file_path": "airflow_subprocess_data/top_20_ctr.csv",
-            },
-        )
+    #     topctr = PythonOperator(
+    #         task_id="TopCTR",
+    #         python_callable=dagsUtils.train_job,
+    #         op_kwargs={
+    #             "model": Topctr,
+    #             "bucket_name": "ads-recommender-system",
+    #             "curated_data_file_path": "airflow_subprocess_data/curated_ads_views.csv",
+    #             "output_file_path": "airflow_subprocess_data/top_20_ctr.csv",
+    #         },
+    #     )
 
     with TaskGroup(group_id="WriteJob") as WriteJob:
         topproductDBWrite = PythonOperator(

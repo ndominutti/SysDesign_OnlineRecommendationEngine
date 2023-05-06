@@ -23,7 +23,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     engine = psycopg2.connect(
         database="postgres",
         host="database-pa-udesa-test.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
-        username="postgres",
+        user="postgres",
         password="udesa856",
         port=5432,
     )
