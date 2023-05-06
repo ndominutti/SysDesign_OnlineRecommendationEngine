@@ -91,4 +91,5 @@ with DAG(
             },
         )
 
-    FilterJob >> TrainingJob >> WriteJob
+    # FilterJob >> TrainingJob >> WriteJob
+    WriteJob
