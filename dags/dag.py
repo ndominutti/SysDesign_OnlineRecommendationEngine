@@ -80,19 +80,16 @@ with DAG(
             },
         )
 
-    # with TaskGroup(group_id = "DBWriting") as group6:
-    #     write1 = PythonOperator(
-    #                                 task_id='DBWriting1',
-    #                                 python_callable=dagsUtils.post_data,
-    #                                 op_kwargs={'bucket_name':"ads-recommender-system",
-    #                                         'file_path':"/airflow_subprocess_data/advertiser.csv",
-    #                                         'data':filter_data1})
-    #     write2 = PythonOperator(
-    #                                 task_id='DBWriting2',
-    #                                 python_callable=dagsUtils.post_data,
-    #                                 op_kwargs={'bucket_name':"ads-recommender-system",
-    #                                         'file_path':"/airflow_subprocess_data/products.csv",
-    #                                         'data':filter_data2})
+    with TaskGroup(group_id="TrainJob") as WriteJob:
+        topproduct = PythonOperator(
+            task_id="TopproductDBWrite",
+            python_callable=dagsUtils.write_rds,
+            op_kwargs={
+                "bucket_name": "ads-recommender-system",
+                "recommendation_file_path": "airflow_subprocess_data/top_20_products.csv",
+                "model_type": "products",
+            },
+        )
 
     FilterJob >> TrainingJob
-    # group5 >> group6
+    TrainingJob >> WriteJob
