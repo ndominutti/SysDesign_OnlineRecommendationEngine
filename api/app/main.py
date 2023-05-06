@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import APIUtils
+from . import APIUtils
 
 app = FastAPI()
 
@@ -9,6 +9,6 @@ def read_root():
     return {"Working": "API"}
 
 
-@app.get(f"/recommendations/{ADV}/{Modelo}")
+@app.get("/recommendations/{ADV}/{Modelo}")
 def recommendations(ADV: str, Modelo: str):
     return APIUtils.query_latest_recommendation(ADV, Modelo)
