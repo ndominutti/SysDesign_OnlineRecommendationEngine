@@ -11,7 +11,7 @@ if __name__ == "__main__":
     )
 
     cursor = engine.cursor()
-    cursor.execute(f"""SELECT * FROM {sys.argv[0]}""")
+    cursor.execute(f"""SELECT * FROM {sys.argv[1]}""")
     rows = cursor.fetchall()
     for row in rows:
         print(row)
