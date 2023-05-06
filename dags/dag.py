@@ -80,8 +80,8 @@ with DAG(
             },
         )
 
-    with TaskGroup(group_id="TrainJob") as WriteJob:
-        topproduct = PythonOperator(
+    with TaskGroup(group_id="WriteJob") as WriteJob:
+        topproductDBWrite = PythonOperator(
             task_id="TopproductDBWrite",
             python_callable=dagsUtils.write_rds,
             op_kwargs={
@@ -91,5 +91,4 @@ with DAG(
             },
         )
 
-    FilterJob >> TrainingJob
-    TrainingJob >> WriteJob
+    FilterJob >> TrainingJob >> WriteJob
