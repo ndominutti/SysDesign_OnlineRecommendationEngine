@@ -101,6 +101,7 @@ with DAG(
             },
         )
 
+    with TaskGroup(group_id="WriteHistoricJob") as WriteHistoricJob:
         topproductDBWriteHistoric = PythonOperator(
             task_id="TopproductDBWriteHistoric",
             python_callable=dagsUtils.write_historic,
@@ -121,4 +122,4 @@ with DAG(
             },
         )
 
-    FilterJob >> TrainingJob >> WriteJob
+    FilterJob >> TrainingJob >> WriteJob >> WriteHistoricJob
