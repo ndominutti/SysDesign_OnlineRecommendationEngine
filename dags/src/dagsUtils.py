@@ -85,7 +85,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
         "ctr",
     ], 'model_type can only recieve "products" or "ctr"'
     recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
-
+    print("OK")
     engine = psycopg2.connect(
         database="postgres",
         host="database-pa-udesa-test.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
@@ -102,13 +102,16 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
                                                                                     EVENT_COUNT integer,
                                                                                     PRIMARY KEY (ADVERTISER, PRODUCT));"""
         )
+        print("OK1")
         cursor.execute("""TRUNCATE TABLE LATEST_PRODUCT_RECOMMENDATION;""")
+        print("OK2")
         for index, row in recommendation.iterrows():
             cursor.execute(
                 """INSERT INTO LATEST_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, EVENT_COUNT) 
                                                     VALUES (%s, %s, %s)""",
                 (row["advertiser_id"], row["product_id"], row["event_count"]),
             )
+        print("OK3")
     else:
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS LATEST_ADVERTISERS_RECOMMENDATION (ADVERTISER VARCHAR(50),
