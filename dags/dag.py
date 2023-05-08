@@ -101,4 +101,24 @@ with DAG(
             },
         )
 
+        topproductDBWriteHistoric = PythonOperator(
+            task_id="TopproductDBWriteHistoric",
+            python_callable=dagsUtils.write_historic,
+            op_kwargs={
+                "bucket_name": "ads-recommender-system",
+                "recommendation_file_path": "airflow_subprocess_data/top_20_products.csv",
+                "model_type": "products",
+            },
+        )
+
+        topCTRDBWriteHistoric = PythonOperator(
+            task_id="TopCTRDBWriteHistoric",
+            python_callable=dagsUtils.write_historic,
+            op_kwargs={
+                "bucket_name": "ads-recommender-system",
+                "recommendation_file_path": "airflow_subprocess_data/top_20_ctr.csv",
+                "model_type": "ctr",
+            },
+        )
+
     FilterJob >> TrainingJob >> WriteJob
