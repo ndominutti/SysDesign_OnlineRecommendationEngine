@@ -88,8 +88,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     print("OK")
     engine = psycopg2.connect(
         database="postgres",
-        host="database-pa-udesa-test.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
-        user="postgres",
+        host="airflow-db.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
         password="udesa856",
         port=5432,
     )
