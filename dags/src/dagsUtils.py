@@ -38,7 +38,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS HISTORIC_PRODUCT_RECOMMENDATION (ADVERTISER VARCHAR(50),
                                                                             PRODUCT VARCHAR(50),
-                                                                            DATE TIMESTAMP,
+                                                                            DATE date,
                                                                             EVENT_COUNT integer,
                                                                             PRIMARY KEY (ADVERTISER, PRODUCT, DATE));"""
         )
@@ -57,7 +57,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS HISTORIC_ADVERTISERS_RECOMMENDATION (ADVERTISER VARCHAR(50),
                                                                             PRODUCT VARCHAR(50),
-                                                                            DATE TIMESTAMP,
+                                                                            DATE date,
                                                                             CTR float8,
                                                                             PRIMARY KEY (ADVERTISER, PRODUCT, DATE));"""
         )
