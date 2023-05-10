@@ -48,7 +48,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                                                     VALUES (%s, %s, %s, %s)
                                                     ON CONFLICT (ADVERTISER,DATE) DO UPDATE
                                                     SET PRODUCT = EXCLUDED.PRODUCT,
-                                                        CTR     = EXCLUDED.CTR;""",
+                                                        EVENT_COUNT     = EXCLUDED.EVENT_COUNT;""",
                 (
                     row["advertiser_id"],
                     row["product_id"],
@@ -69,7 +69,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                 """INSERT INTO HISTORIC_ADVERTISERS_RECOMMENDATION (ADVERTISER, PRODUCT, DATE, CTR) 
                                                     VALUES (%s, %s, %s, %s)
                                                     ON CONFLICT (ADVERTISER,DATE) DO UPDATE
-                                                    SET PRODUCT = EXCLUDED.PRODUCT,
+                                                    SET PRODUCT =    EXCLUDED.PRODUCT,
                                                         CTR     = EXCLUDED.CTR;""",
                 (
                     row["advertiser_id"],
