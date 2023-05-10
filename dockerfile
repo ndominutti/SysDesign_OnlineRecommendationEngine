@@ -15,7 +15,7 @@ RUN pip install -r requirements.txt
 ENV AIRFLOW__CORE__EXECUTOR='LocalExecutor'
 ENV AIRFLOW__CORE__PARALLELISM=2
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
-ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN='postgresql+psycopg2://postgres_admin:udesa856@db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com:5432'
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN='postgresql+psycopg2://postgres_admin:udesa856@db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com:5432/postgres'
 ENV AIRFLOW__WEBSERVER__WORKERS=1
 ENV AIRFLOW__SCHEDULER__WEB_SERVER_PORT=8000
 #ENV AIRFLOW__WEBSERVER__BASE_URL='https://ec2-18-222-254-244.us-east-2.compute.amazonaws.com:8000/'
