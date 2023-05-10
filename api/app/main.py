@@ -5,9 +5,9 @@ from . import APIUtils
 app = FastAPI()
 
 engine = psycopg2.connect(
-    database="postgres_admin",
+    database="postgres",
     host="db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
-    user="postgres",
+    user="postgres_admin",
     password="udesa856",
     port=5432,
 )

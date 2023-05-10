@@ -26,9 +26,9 @@ def write_historic(bucket_name, recommendation_file_path, model_type):
     recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
 
     engine = psycopg2.connect(
-        database="postgres_admin",
+        database="postgres",
         host="db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
-        user="postgres",
+        user="postgres_admin",
         password="udesa856",
         port=5432,
     )
@@ -88,8 +88,9 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
     print("OK")
     engine = psycopg2.connect(
-        database="postgres_admin",
+        database="postgres",
         host="db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
+        username="postgres_admin",
         password="udesa856",
         port=5432,
     )
