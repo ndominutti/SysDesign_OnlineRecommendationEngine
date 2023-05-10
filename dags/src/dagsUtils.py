@@ -44,7 +44,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         )
         cursor.execute(
             """DELETE FROM HISTORIC_PRODUCT_RECOMMENDATION WHERE DATE=%s;""",
-            (execution_date.split(" ")[0]),
+            execution_date.split(" ")[0],
         )
         for index, row in recommendation.iterrows():
             cursor.execute(
@@ -67,7 +67,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         )
         cursor.execute(
             """DELETE FROM HISTORIC_ADVERTISERS_RECOMMENDATION WHERE DATE=%s;""",
-            (execution_date.split(" ")[0]),
+            execution_date.split(" ")[0],
         )
         for index, row in recommendation.iterrows():
             cursor.execute(
