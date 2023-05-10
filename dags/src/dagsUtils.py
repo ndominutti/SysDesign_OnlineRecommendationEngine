@@ -49,7 +49,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                 (
                     row["advertiser_id"],
                     row["product_id"],
-                    execution_date.strftime("%Y-%m-%d"),
+                    execution_date.split(" ")[0],
                     row["event_count"],
                 ),
             )
@@ -68,7 +68,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                 (
                     row["advertiser_id"],
                     row["product_id"],
-                    execution_date.strftime("%Y-%m-%d"),
+                    execution_date.split(" ")[0],
                     row["CTR"],
                 ),
             )
