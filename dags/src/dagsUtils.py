@@ -42,11 +42,11 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                                                                             EVENT_COUNT integer,
                                                                             PRIMARY KEY (ADVERTISER, PRODUCT, DATE));"""
         )
+        cursor.execute(
+            """DELETE FROM HISTORIC_PRODUCT_RECOMMENDATION WHERE DATE=%s;""",
+            (execution_date.split(" ")[0]),
+        )
         for index, row in recommendation.iterrows():
-            cursor.execute(
-                """DELETE FROM HISTORIC_PRODUCT_RECOMMENDATION WHERE ADVERTISER=%s AND DATE=%s;""",
-                (row["advertiser_id"], execution_date.split(" ")[0]),
-            )
             cursor.execute(
                 """INSERT INTO HISTORIC_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, DATE, EVENT_COUNT) 
                                                     VALUES (%s, %s, %s, %s);""",
@@ -65,11 +65,11 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                                                                             CTR float8,
                                                                             PRIMARY KEY (ADVERTISER, PRODUCT, DATE));"""
         )
+        cursor.execute(
+            """DELETE FROM HISTORIC_ADVERTISERS_RECOMMENDATION WHERE DATE=%s;""",
+            (execution_date.split(" ")[0]),
+        )
         for index, row in recommendation.iterrows():
-            cursor.execute(
-                """DELETE FROM HISTORIC_ADVERTISERS_RECOMMENDATION WHERE ADVERTISER=%s AND DATE=%s;""",
-                (row["advertiser_id"], execution_date.split(" ")[0]),
-            )
             cursor.execute(
                 """INSERT INTO HISTORIC_ADVERTISERS_RECOMMENDATION (ADVERTISER, PRODUCT, DATE, CTR) 
                                                     VALUES (%s, %s, %s, %s);""",
