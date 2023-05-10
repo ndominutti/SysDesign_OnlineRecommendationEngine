@@ -109,7 +109,9 @@ with DAG(
                 "bucket_name": "ads-recommender-system",
                 "recommendation_file_path": "airflow_subprocess_data/top_20_products.csv",
                 "model_type": "products",
+                "execution_date": "{{ execution_date }}",
             },
+            provide_context=True,
         )
 
         topCTRDBWriteHistoric = PythonOperator(
@@ -119,6 +121,7 @@ with DAG(
                 "bucket_name": "ads-recommender-system",
                 "recommendation_file_path": "airflow_subprocess_data/top_20_ctr.csv",
                 "model_type": "ctr",
+                "execution_date": "{{ execution_date }}",
             },
         )
 

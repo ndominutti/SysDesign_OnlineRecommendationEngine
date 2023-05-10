@@ -18,7 +18,7 @@ def train_job(model, bucket_name, curated_data_file_path, output_file_path):
     S3utils.post_data(bucket_name, output_file_path, recommendation)
 
 
-def write_historic(bucket_name, recommendation_file_path, model_type):
+def write_historic(bucket_name, recommendation_file_path, model_type, execution_date):
     assert model_type in [
         "products",
         "ctr",
@@ -49,7 +49,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type):
                 (
                     row["advertiser_id"],
                     row["product_id"],
-                    datetime.now(),
+                    execution_date,
                     row["event_count"],
                 ),
             )
@@ -68,7 +68,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type):
                 (
                     row["advertiser_id"],
                     row["product_id"],
-                    datetime.now(),
+                    execution_date,
                     row["CTR"],
                 ),
             )
