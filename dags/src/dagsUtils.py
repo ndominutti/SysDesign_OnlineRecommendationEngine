@@ -45,7 +45,10 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         for index, row in recommendation.iterrows():
             cursor.execute(
                 """INSERT INTO HISTORIC_PRODUCT_RECOMMENDATION (ADVERTISER, PRODUCT, DATE, EVENT_COUNT) 
-                                                    VALUES (%s, %s, %s, %s)""",
+                                                    VALUES (%s, %s, %s, %s)
+                                                    ON CONFLICT (ADVERTISER,DATE) DO UPDATE
+                                                    SET PRODUCT = EXCLUDED.PRODUCT,
+                                                        CTR     = EXCLUDED.CTR;""",
                 (
                     row["advertiser_id"],
                     row["product_id"],
@@ -64,7 +67,10 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
         for index, row in recommendation.iterrows():
             cursor.execute(
                 """INSERT INTO HISTORIC_ADVERTISERS_RECOMMENDATION (ADVERTISER, PRODUCT, DATE, CTR) 
-                                                    VALUES (%s, %s, %s, %s)""",
+                                                    VALUES (%s, %s, %s, %s)
+                                                    ON CONFLICT (ADVERTISER,DATE) DO UPDATE
+                                                    SET PRODUCT = EXCLUDED.PRODUCT,
+                                                        CTR     = EXCLUDED.CTR;""",
                 (
                     row["advertiser_id"],
                     row["product_id"],
