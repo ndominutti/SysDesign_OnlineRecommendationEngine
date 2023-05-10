@@ -42,7 +42,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
                                                                             EVENT_COUNT integer,
                                                                             PRIMARY KEY (ADVERTISER, PRODUCT, DATE));"""
         )
-        aux = execution_date.split(" ")[0]
+        aux = execution_date.split(" ")[0].split("T")[0]
         print("#" * 50)
         print(aux)
         print("#" * 50)
