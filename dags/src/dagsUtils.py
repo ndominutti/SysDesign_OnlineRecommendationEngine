@@ -34,7 +34,6 @@ def write_historic(bucket_name, recommendation_file_path, model_type):
     )
 
     cursor = engine.cursor()
-    engine.begin()
     if model_type == "products":
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS HISTORIC_PRODUCT_RECOMMENDATION (ADVERTISER VARCHAR(50),
