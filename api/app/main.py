@@ -28,6 +28,6 @@ def stats():
     return {"WIP": "WIP"}
 
 
-@app.get("/history/{ADV}")
-def history(ADV: str):
-    return {"WIP": "WIP"}
+@app.get("/history/{ADV}/{Modelo}")
+def history(ADV: str, Modelo: str):
+    return APIUtils.query_latest_recommendation(ADV, Modelo, engine)
