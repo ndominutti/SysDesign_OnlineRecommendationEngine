@@ -27,7 +27,7 @@ def query_historic_recommendation(advertiser_id, model_type, engine):
         "products": "HISTORIC_PRODUCT_RECOMMENDATION",
         "ctr": "HISTORIC_ADVERTISERS_RECOMMENDATION",
     }
-    query = f"""SELECT * FROM {table_names[model_type]} WHERE ADVERTISER = '{advertiser_id}' AND DATE <= CURRENT_DATE - INTERVAL '7 days';"""
+    query = f"""SELECT * FROM {table_names[model_type]} WHERE ADVERTISER = '{advertiser_id}' AND DATE >= CURRENT_DATE - INTERVAL '7 days';"""
     dataframe = pd.read_sql(query, engine)
     if dataframe.shape[0] < 0:
         return {
