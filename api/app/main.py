@@ -30,4 +30,4 @@ def stats():
 
 @app.get("/history/{ADV}/{Modelo}")
 def history(ADV: str, Modelo: str):
-    return APIUtils.query_latest_recommendation(ADV, Modelo, engine)
+    return APIUtils.query_historic_recommendation(ADV, Modelo, engine)
