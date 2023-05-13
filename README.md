@@ -9,3 +9,7 @@
 
 # Parte API
 * Levantar autoscaling group con launch template ya hecho (esto conecta ECS y levanta una EC2)
+
+
+# Explicación
+* Si el cliente no tuvo datos para el día anterior, no va a rener recomendaciones para el día siguiente
