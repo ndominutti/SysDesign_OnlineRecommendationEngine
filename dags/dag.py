@@ -66,6 +66,7 @@ with DAG(
                 "bucket_name": "ads-recommender-system",
                 "curated_data_file_path": "airflow_subprocess_data/curated_product_views.csv",
                 "output_file_path": "airflow_subprocess_data/top_20_products.csv",
+                "execution_date": "{{ execution_date }}",
             },
         )
 
@@ -77,6 +78,7 @@ with DAG(
                 "bucket_name": "ads-recommender-system",
                 "curated_data_file_path": "airflow_subprocess_data/curated_ads_views.csv",
                 "output_file_path": "airflow_subprocess_data/top_20_ctr.csv",
+                "execution_date": "{{ execution_date }}",
             },
         )
 
