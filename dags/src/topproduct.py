@@ -7,7 +7,9 @@ class Topproduct:
         self.data = data
 
     def top_20(self, execution_date):
-        self.data = self.data[self.data["date"] == execution_date.split(" ")[0]]
+        self.data = self.data[
+            self.data["date"] == execution_date.split(" ")[0].split("T")[0]
+        ]
         self.data = (
             self.data.groupby(["advertiser_id", "product_id"])
             .size()
