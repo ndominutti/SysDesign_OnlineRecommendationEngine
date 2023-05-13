@@ -97,7 +97,6 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
         "ctr",
     ], 'model_type can only recieve "products" or "ctr"'
     recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
-    print("OK")
     engine = psycopg2.connect(
         database="postgres",
         host="db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",

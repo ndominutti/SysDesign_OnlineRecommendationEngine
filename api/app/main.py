@@ -25,7 +25,7 @@ def recommendations(ADV: str, Modelo: str):
 
 @app.get("/stats/")
 def stats():
-    return {"WIP": "WIP"}
+    return APIUtils.stats_factory()
 
 
 @app.get("/history/{ADV}/{Modelo}")
