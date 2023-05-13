@@ -45,7 +45,7 @@ def _stat_cantidades(dataframe, column):
 
 def stats_factory(engine):
     query_prods = f"""SELECT * FROM LATEST_PRODUCT_RECOMMENDATION;"""
-    query_advs = f"""SELECT * FROM LATEST_PRODUCT_RECOMMENDATION;"""
+    query_advs = f"""SELECT * FROM LATEST_ADVERTISERS_RECOMMENDATION;"""
     dataframe_prod = pd.read_sql(query_prods, engine)
     dataframe_advs = pd.read_sql(query_advs, engine)
     return {
