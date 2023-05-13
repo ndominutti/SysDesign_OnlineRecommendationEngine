@@ -18,7 +18,7 @@ def train_job(
     model_instance = model(curated_data)
     excecution_previous_date = str(
         datetime.strptime(execution_date.split("T")[0], "%Y-%m-%d") - timedelta(days=1)
-    )
+    ).split(" ")[0]
     print(excecution_previous_date)
     recommendation = model_instance.top_20(excecution_previous_date)
     S3utils.post_data(bucket_name, output_file_path, recommendation)
