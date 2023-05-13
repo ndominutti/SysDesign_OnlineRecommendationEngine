@@ -16,7 +16,9 @@ def train_job(
 ):
     curated_data = S3utils.get_data(bucket_name, curated_data_file_path)
     model_instance = model(curated_data)
-    excecution_previous_date = execution_date - timedelta(days=1)
+    excecution_previous_date = datetime.strptime(
+        execution_date, "%Y-%m-%d"
+    ) - timedelta(days=1)
     recommendation = model_instance.top_20(excecution_previous_date)
     S3utils.post_data(bucket_name, output_file_path, recommendation)
 
