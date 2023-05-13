@@ -13,9 +13,7 @@ class Topctr:
         # print(self.data["date"])
         # print("\n" * 4)
         # print("#" * 100)
-        self.data = self.data[
-            self.data["date"] == execution_date.split(" ")[0].split("T")[0]
-        ]
+        self.data = self.data[self.data["date"] == execution_date]
         self.data["clicked"] = self.data["type"].apply(lambda x: x == "click")
 
         CTR_index = pd.DataFrame(
