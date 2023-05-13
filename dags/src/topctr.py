@@ -7,6 +7,12 @@ class Topctr:
         self.data = data
 
     def top_20(self, execution_date):
+        print("#" * 100)
+        print("\n" * 4)
+        print(execution_date.split(" ")[0])
+        print(self.data["date"])
+        print("\n" * 4)
+        print("#" * 100)
         self.data = self.data[self.data["date"] == execution_date.split(" ")[0]]
         self.data["clicked"] = self.data["type"].apply(lambda x: x == "click")
 
