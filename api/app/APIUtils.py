@@ -58,7 +58,7 @@ def _stat_last_week_variation_rate(dataframe):
 def stats_factory(engine):
     dataframe_prod_s3 = S3utils.get_data(
         bucket_name="ads-recommender-system",
-        file_path="airflow_subprocess_data/curated_produc_views.csv",
+        file_path="airflow_subprocess_data/curated_product_views.csv",
     )
     dataframe_advs_s3 = S3utils.get_data(
         bucket_name="ads-recommender-system",
