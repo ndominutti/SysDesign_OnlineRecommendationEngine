@@ -54,6 +54,14 @@ def _stat_last_week_variation_rate(dataframe):
         "variation_score": variation_order.values.tolist(),
     }
 
+def _stat_model_coincidence(dataframe_prods, dataframe_advs):
+    df = pd.concat([dataframe_prods, dataframe_advs])
+    df = (1-df.groupby('advertiser').product.nunique() /\
+             df.groupby('advertiser').size()[0]).sort_values(ascending=False)
+    return {
+        "model_reommendation_coincidence_by_advertiser": df.index.values.tolist(),
+        "score": df.values.tolist()
+    }
 
 def stats_factory(engine):
     dataframe_prod_s3 = S3utils.get_data(
@@ -87,4 +95,5 @@ def stats_factory(engine):
             "products": _stat_last_week_variation_rate(dataframe_prod_rds),
             "ctr": _stat_last_week_variation_rate(dataframe_advs_rds),
         },
+        "model_coincidence_by_advertiser": _stat_model_coincidence,
     }
