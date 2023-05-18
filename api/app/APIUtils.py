@@ -44,23 +44,47 @@ def _stat_cantidades(dataframe, column):
     return dataframe[column].nunique()
 
 
+def _stat_last_week_variation_rate(dataframe):
+    variation_order = (
+        dataframe.groupby("advertiser").product.nunique()
+        / dataframe.groupby("advertiser").product.size()
+    ).sort_values(ascending=False)
+    return {
+        "variation_order": variation_order.index.values.tolist(),
+        "variation_score": variation_order.values.tolist(),
+    }
+
+
 def stats_factory(engine):
-    dataframe_prod = S3utils.get_data(
+    dataframe_prod_s3 = S3utils.get_data(
         bucket_name="ads-recommender-system",
-        file_path="airflow_subprocess_data/curated_product_views.csv",
+        file_path="airflow_subprocess_data/curated_produc_views.csv",
     )
-    dataframe_advs = S3utils.get_data(
+    dataframe_advs_s3 = S3utils.get_data(
         bucket_name="ads-recommender-system",
         file_path="airflow_subprocess_data/curated_ads_views.csv",
     )
 
+    dataframe_prod_rds = pd.read_sql(
+        f"""SELECT * FROM HISTORIC_PRODUCT_RECOMMENDATION WHERE DATE >= CURRENT_DATE - INTERVAL '7 days';""",
+        engine,
+    )
+    dataframe_advs_rds = pd.read_sql(
+        f"""SELECT * FROM HISTORIC_ADVERTISERS_RECOMMENDATION WHERE DATE >= CURRENT_DATE - INTERVAL '7 days';""",
+        engine,
+    )
+
     return {
-        "Cantidad_Advertisers": {
-            "products": _stat_cantidades(dataframe_prod, "advertiser_id"),
-            "ctr": _stat_cantidades(dataframe_advs, "advertiser_id"),
+        "Cantidad_Advertisers_data_raw": {
+            "products": _stat_cantidades(dataframe_prod_s3, "advertiser_id"),
+            "ctr": _stat_cantidades(dataframe_advs_s3, "advertiser_id"),
         },
-        "Cantidad_de_productos": {
-            "products": _stat_cantidades(dataframe_prod, "product_id"),
-            "ctr": _stat_cantidades(dataframe_advs, "product_id"),
+        "Cantidad_de_productos_data_raw": {
+            "products": _stat_cantidades(dataframe_prod_s3, "product_id"),
+            "ctr": _stat_cantidades(dataframe_advs_s3, "product_id"),
+        },
+        "last_week_variation": {
+            "products": _stat_last_week_variation_rate(dataframe_prod_rds),
+            "ctr": _stat_last_week_variation_rate(dataframe_advs_rds),
         },
     }
