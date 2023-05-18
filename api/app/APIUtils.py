@@ -1,5 +1,6 @@
 import pandas as pd
 import psycopg2
+from . import S3utils
 
 
 def query_latest_recommendation(advertiser_id, model_type, engine):
@@ -44,13 +45,22 @@ def _stat_cantidades(dataframe, column):
 
 
 def stats_factory(engine):
+    dataframe_prod = S3utils.get_data(
+        bucket_name="ads-recommender-system",
+        raw_data_file_path="airflow_subprocess_data/curated_product_views.csv",
+    )
+    dataframe_advs = S3utils.get_data(
+        bucket_name="ads-recommender-system",
+        raw_data_file_path="airflow_subprocess_data/curated_ads_views.csv",
+    )
+
     return {
         "Cantidad_Advertisers": {
-            "products": _stat_cantidades(dataframe_prod, "advertiser"),
-            "ctr": _stat_cantidades(dataframe_advs, "advertiser"),
+            "products": _stat_cantidades(dataframe_prod, "advertiser_id"),
+            "ctr": _stat_cantidades(dataframe_advs, "advertiser_id"),
         },
         "Cantidad_de_productos": {
-            "products": _stat_cantidades(dataframe_prod, "product"),
-            "ctr": _stat_cantidades(dataframe_advs, "product"),
+            "products": _stat_cantidades(dataframe_prod, "product_id"),
+            "ctr": _stat_cantidades(dataframe_advs, "product_id"),
         },
     }
