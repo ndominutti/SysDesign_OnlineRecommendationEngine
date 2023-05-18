@@ -47,11 +47,11 @@ def _stat_cantidades(dataframe, column):
 def stats_factory(engine):
     dataframe_prod = S3utils.get_data(
         bucket_name="ads-recommender-system",
-        raw_data_file_path="airflow_subprocess_data/curated_product_views.csv",
+        file_path="airflow_subprocess_data/curated_product_views.csv",
     )
     dataframe_advs = S3utils.get_data(
         bucket_name="ads-recommender-system",
-        raw_data_file_path="airflow_subprocess_data/curated_ads_views.csv",
+        file_path="airflow_subprocess_data/curated_ads_views.csv",
     )
 
     return {
