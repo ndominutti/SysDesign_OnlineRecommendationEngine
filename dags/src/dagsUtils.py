@@ -156,5 +156,5 @@ def send_sns_notification(execution_date):
     message = f"The Airflow job succeeded at {execution_date}."
 
     # Publish the SNS message
-    sns_client = boto3.client("sns")
+    sns_client = boto3.client("sns", region_name="us-east-2")
     sns_client.publish(TopicArn=sns_topic_arn, Message=message)
