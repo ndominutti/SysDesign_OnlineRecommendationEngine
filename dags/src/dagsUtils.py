@@ -148,13 +148,13 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     print("Insert Success")
 
 
-    def send_sns_notification(execution_date):
-        # Specify the SNS topic ARN
-        sns_topic_arn = 'airflow_recsys'
+def send_sns_notification(execution_date):
+    # Specify the SNS topic ARN
+    sns_topic_arn = "airflow_recsys"
 
-        # Create the SNS message
-        message = f"The Airflow job succeeded at {execution_date}."
+    # Create the SNS message
+    message = f"The Airflow job succeeded at {execution_date}."
 
-        # Publish the SNS message
-        sns_client = boto3.client('sns')
-        sns_client.publish(TopicArn=sns_topic_arn, Message=message)
+    # Publish the SNS message
+    sns_client = boto3.client("sns")
+    sns_client.publish(TopicArn=sns_topic_arn, Message=message)
