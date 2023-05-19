@@ -127,4 +127,10 @@ with DAG(
             },
         )
 
-    FilterJob >> TrainingJob >> WriteJob >> WriteHistoricJob
+    SendNotification = PythonOperator(
+        task_id="SendNotification",
+        python_callable=dagsUtils.send_sns_notification,
+        op_kwargs={"execution_date": "{{ execution_date }}"},
+    )
+
+    FilterJob >> TrainingJob >> WriteJob >> WriteHistoricJob >> SendNotification

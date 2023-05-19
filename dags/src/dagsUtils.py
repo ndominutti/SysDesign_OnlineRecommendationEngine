@@ -2,6 +2,10 @@ import pandas as pd
 from . import S3utils
 import psycopg2
 from datetime import datetime, timedelta
+from airflow.operators.email_operator import EmailOperator
+from airflow.hooks.S3_hook import S3Hook
+from airflow.hooks.base_hook import BaseHook
+import boto3
 
 
 def filter_data(bucket_name, raw_data_file_path, act_adv_file_path, output_file_path):
@@ -142,3 +146,15 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     cursor.close()
     engine.close()
     print("Insert Success")
+
+
+    def send_sns_notification(execution_date):
+        # Specify the SNS topic ARN
+        sns_topic_arn = 'airflow_recsys'
+
+        # Create the SNS message
+        message = f"The Airflow job succeeded at {execution_date}."
+
+        # Publish the SNS message
+        sns_client = boto3.client('sns')
+        sns_client.publish(TopicArn=sns_topic_arn, Message=message)
