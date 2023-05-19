@@ -150,7 +150,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
 
 def send_sns_notification(execution_date):
     # Specify the SNS topic ARN
-    sns_topic_arn = "airflow_recsys"
+    sns_topic_arn = "arn:aws:sns:us-east-2:169385451286:airflow_recsys"
 
     # Create the SNS message
     message = f"The Airflow job succeeded at {execution_date}."
