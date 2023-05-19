@@ -35,4 +35,4 @@ RUN git clone https://github.com/ndominutti/SysDesign_OnlineRecommendationEngine
 
 RUN cp -r SysDesign_OnlineRecommendationEngine/dags airflow/
 
-CMD ["airflow","webserver","-p","8000","&","airflow","scheduler"]
+ENTRYPOINT ["/bin/bash", "/script.sh"]
