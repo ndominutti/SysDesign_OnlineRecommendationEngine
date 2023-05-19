@@ -3,3 +3,4 @@ pandas
 uvicorn
 psycopg2-binary
 boto3
+apache-airflow-providers-amazon
