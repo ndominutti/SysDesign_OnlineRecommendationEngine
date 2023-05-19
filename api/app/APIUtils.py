@@ -50,18 +50,51 @@ def _stat_last_week_variation_rate(dataframe):
         / dataframe.groupby("advertiser").product.size()
     ).sort_values(ascending=False)
     return {
-        "variation_order": variation_order.index.values.tolist(),
-        "variation_score": variation_order.values.tolist(),
+        "order": variation_order.index.values.tolist(),
+        "score": variation_order.values.tolist(),
     }
+
 
 def _stat_model_coincidence(dataframe_prods, dataframe_advs):
     df = pd.concat([dataframe_prods, dataframe_advs])
-    df = (1-df.groupby('advertiser').product.nunique() /\
-             df.groupby('advertiser').size()[0]).sort_values(ascending=False)
-    return {
-        "model_reommendation_coincidence_by_advertiser": df.index.values.tolist(),
-        "score": df.values.tolist()
-    }
+    df = (
+        1
+        - df.groupby("advertiser").product.nunique()
+        / df.groupby("advertiser").size()[0]
+    ).sort_values(ascending=False)
+    return {"order": df.index.values.tolist(), "score": df.values.tolist()}
+
+
+def _stat_weekly_repeated_products(dataframe_prods, dataframe_advs):
+    dataframe_prods = (
+        dataframe_prods.groupby(["advertiser"])
+        .product.value_counts()
+        .reset_index()
+        .groupby("advertiser")
+        .head()
+    )
+    dataframe_advs = (
+        dataframe_advs[dataframe_advs.ctr > 0]
+        .groupby(["advertiser"])
+        .product.value_counts()
+        .reset_index()
+        .groupby("advertiser")
+        .head()
+    )
+
+    return (
+        {
+            "advertiser": dataframe_prods.advertiser.values.tolist(),
+            "order": dataframe_prods["product"].values.tolist(),
+            "score": dataframe_prods["count"].values.tolist(),
+        },
+        {
+            "advertiser": dataframe_advs.advertiser.values.tolist(),
+            "order": dataframe_advs["product"].values.tolist(),
+            "score": dataframe_advs["count"].values.tolist(),
+        },
+    )
+
 
 def stats_factory(engine):
     dataframe_prod_s3 = S3utils.get_data(
@@ -73,27 +106,46 @@ def stats_factory(engine):
         file_path="airflow_subprocess_data/curated_ads_views.csv",
     )
 
-    dataframe_prod_rds = pd.read_sql(
+    dataframe_prod_rds_hist = pd.read_sql(
         f"""SELECT * FROM HISTORIC_PRODUCT_RECOMMENDATION WHERE DATE >= CURRENT_DATE - INTERVAL '7 days';""",
         engine,
     )
-    dataframe_advs_rds = pd.read_sql(
+    dataframe_advs_rds_hist = pd.read_sql(
         f"""SELECT * FROM HISTORIC_ADVERTISERS_RECOMMENDATION WHERE DATE >= CURRENT_DATE - INTERVAL '7 days';""",
         engine,
     )
 
+    dataframe_prod_rds = pd.read_sql(
+        f"""SELECT * FROM LATEST_PRODUCT_RECOMMENDATION;""",
+        engine,
+    )
+    dataframe_advs_rds = pd.read_sql(
+        f"""SELECT * FROM LATEST_ADVERTISERS_RECOMMENDATION;""",
+        engine,
+    )
+
+    weekly_top5_products_by_advertiser = _stat_weekly_repeated_products(
+        dataframe_prod_rds_hist, dataframe_advs_rds_hist
+    )
+
     return {
-        "Cantidad_Advertisers_data_raw": {
+        "advertisers_count_data_raw": {
             "products": _stat_cantidades(dataframe_prod_s3, "advertiser_id"),
             "ctr": _stat_cantidades(dataframe_advs_s3, "advertiser_id"),
         },
-        "Cantidad_de_productos_data_raw": {
+        "products_count_data_raw": {
             "products": _stat_cantidades(dataframe_prod_s3, "product_id"),
             "ctr": _stat_cantidades(dataframe_advs_s3, "product_id"),
         },
         "last_week_variation": {
-            "products": _stat_last_week_variation_rate(dataframe_prod_rds),
-            "ctr": _stat_last_week_variation_rate(dataframe_advs_rds),
+            "products": _stat_last_week_variation_rate(dataframe_prod_rds_hist),
+            "ctr": _stat_last_week_variation_rate(dataframe_advs_rds_hist),
         },
-        "model_coincidence_by_advertiser": _stat_model_coincidence,
+        "model_coincidence_by_advertiser": _stat_model_coincidence(
+            dataframe_prod_rds, dataframe_advs_rds
+        ),
+        "weekly_top5_products_by_advertiser": {
+            "products": weekly_top5_products_by_advertiser[0],
+            "ctr": weekly_top5_products_by_advertiser[1],
+        },
     }
