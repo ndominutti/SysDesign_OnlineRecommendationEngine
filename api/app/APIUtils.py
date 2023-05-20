@@ -1,6 +1,11 @@
 import pandas as pd
 import psycopg2
-from . import S3utils
+import os
+import sys
+
+dagsSrcDir = "../../dags/"
+sys.path.append(dagsSrcDir)
+from src import S3utils
 
 
 def query_latest_recommendation(
