@@ -29,7 +29,7 @@ from src.topctr import Topctr
 
 with DAG(
     dag_id="ad_recommender",
-    schedule_interval="43 20 * * *",
+    schedule_interval="38 20 * * *",
     start_date=datetime(2023, 5, 10),
     catchup=True,
 ) as dag:
