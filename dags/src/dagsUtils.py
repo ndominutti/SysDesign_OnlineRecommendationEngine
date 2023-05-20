@@ -153,7 +153,7 @@ def send_sns_notification(execution_date):
     sns_topic_arn = "arn:aws:sns:us-east-2:169385451286:airflow_recsys"
 
     # Create the SNS message
-    message = f"The Airflow job succeeded at {execution_date}."
+    message = f"Group Dominutti-SuarezGurruchaga-Telechea's airflow job succeeded at {execution_date}."
 
     # Publish the SNS message
     sns_client = boto3.client("sns", region_name="us-east-2")
