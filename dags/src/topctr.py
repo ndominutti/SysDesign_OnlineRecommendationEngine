@@ -3,16 +3,25 @@ from . import S3utils as s3
 
 
 class Topctr:
-    def __init__(self, data):
+    def __init__(self, data: pd.DataFrame):
+        """Model that performs recommendation on last day ads CTR
+
+        Args:
+            data (pd.DataFrame): dataframe where to perform the recommendation
+        """
         self.data = data
 
-    def top_20(self, execution_date):
-        # print("#" * 100)
-        # print("\n" * 4)
-        # print(execution_date.split(" ")[0].split("T")[0])
-        # print(self.data["date"])
-        # print("\n" * 4)
-        # print("#" * 100)
+    def top_20(self, execution_date: str) -> pd.DataFrame:
+        """Perform recommendation returning top20 ads with best CTR for
+        last day for advertiser
+
+        Args:
+            execution_date (str): excecution_date from airflow dag
+
+        Returns:
+            pd.DataFrame: dataframe with top20 products with best CTR for
+        last day for advertiser
+        """
         self.data = self.data[self.data["date"] == execution_date]
         self.data["clicked"] = self.data["type"].apply(lambda x: x == "click")
 

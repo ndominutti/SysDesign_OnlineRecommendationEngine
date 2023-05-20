@@ -3,9 +3,20 @@ import psycopg2
 from . import S3utils
 
 
-def query_latest_recommendation(advertiser_id, model_type, engine):
-    if not model_type in ["products", "ctr"]:
-        return {"Error": 'El model_type debe ser "products" o "ctr"'}
+def query_latest_recommendation(
+    advertiser_id: str, model_type: str, engine: psycopg2.connect
+) -> dict:
+    """
+    Query last recommendation in RDS table
+
+    Args:
+        advertiser_id(str): advertiser_id to get recommendations for
+        model_type(str): products or ctr
+        engine(psycopg2.connect): engine to conect to RDS Postgres
+
+    Returns:
+        dict: recommendations
+    """
     table_names = {
         "products": "LATEST_PRODUCT_RECOMMENDATION",
         "ctr": "LATEST_ADVERTISERS_RECOMMENDATION",
@@ -19,12 +30,20 @@ def query_latest_recommendation(advertiser_id, model_type, engine):
     return {advertiser_id: dataframe["product"].values.tolist()}
 
 
-def query_historic_recommendation(advertiser_id, model_type, engine):
+def query_historic_recommendation(
+    advertiser_id: str, model_type: str, engine: str
+) -> dict:
     """
     Return recommendation from the past 7 days
+
+    Args:
+        advertiser_id(str): advertiser_id to get recommendations for
+        model_type(str): products or ctr
+        engine(psycopg2.connect): engine to conect to RDS Postgres
+
+    Returns:
+        dict: recommendations
     """
-    if not model_type in ["products", "ctr"]:
-        return {"Error": 'El model_type debe ser "products" o "ctr"'}
     table_names = {
         "products": "HISTORIC_PRODUCT_RECOMMENDATION",
         "ctr": "HISTORIC_ADVERTISERS_RECOMMENDATION",
@@ -40,11 +59,28 @@ def query_historic_recommendation(advertiser_id, model_type, engine):
     return {advertiser_id: returnable}
 
 
-def _stat_cantidades(dataframe, column):
+def _stat_cantidades(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
+    """Calculate unique count from a given colum
+
+    Args:
+        dataframe (pd.DataFrame): S3 raw data
+        column (str): data where to perform unique on
+
+    Returns:
+        pd.DataFrame: stats
+    """
     return dataframe[column].nunique()
 
 
-def _stat_last_week_variation_rate(dataframe):
+def _stat_last_week_variation_rate(dataframe: pd.DataFrame) -> dict:
+    """Calulate last week variational rate for advertisers
+
+    Args:
+        dataframe (pd.DataFrame): RDS historial table dataframe
+
+    Returns:
+        dict: stats
+    """
     variation_order = (
         dataframe.groupby("advertiser").product.nunique()
         / dataframe.groupby("advertiser").product.size()
@@ -55,7 +91,18 @@ def _stat_last_week_variation_rate(dataframe):
     }
 
 
-def _stat_model_coincidence(dataframe_prods, dataframe_advs):
+def _stat_model_coincidence(
+    dataframe_prods: pd.DataFrame, dataframe_advs: pd.DataFrame
+) -> dict:
+    """Calulate coincidence between models
+
+    Args:
+        dataframe_prods (pd.DataFrame): RDS latest products table dataframe
+        dataframe_advs (pd.DataFrame): RDS latest ads table dataframe
+
+    Returns:
+        dict: stats
+    """
     df = pd.concat([dataframe_prods, dataframe_advs])
     df = (
         1
@@ -65,7 +112,18 @@ def _stat_model_coincidence(dataframe_prods, dataframe_advs):
     return {"order": df.index.values.tolist(), "score": df.values.tolist()}
 
 
-def _stat_weekly_repeated_products(dataframe_prods, dataframe_advs):
+def _stat_weekly_repeated_products(
+    dataframe_prods: pd.DataFrame, dataframe_advs: pd.DataFrame
+) -> dict:
+    """Calulate weekly repeated products for each model
+
+    Args:
+        dataframe_prods (pd.DataFrame): RDS historical products table dataframe
+        dataframe_advs (pd.DataFrame): RDS historical ads table dataframe
+
+    Returns:
+        dict: stats
+    """
     dataframe_prods = (
         dataframe_prods.groupby(["advertiser"])
         .product.value_counts()
@@ -96,7 +154,16 @@ def _stat_weekly_repeated_products(dataframe_prods, dataframe_advs):
     )
 
 
-def stats_factory(engine):
+def stats_factory(engine: psycopg2.connect) -> dict:
+    """
+    Calculate and show recommendation stats.
+
+    Args:
+        engine(psycopg2.connect):engine to conect to RDS Postgres
+
+    Returns:
+        dict: stats
+    """
     dataframe_prod_s3 = S3utils.get_data(
         bucket_name="ads-recommender-system",
         file_path="airflow_subprocess_data/curated_product_views.csv",

@@ -8,7 +8,12 @@ from airflow.hooks.base_hook import BaseHook
 import boto3
 
 
-def filter_data(bucket_name:str, raw_data_file_path:str, act_adv_file_path:str, output_file_path:str):
+def filter_data(
+    bucket_name: str,
+    raw_data_file_path: str,
+    act_adv_file_path: str,
+    output_file_path: str,
+) -> None:
     """Filter data given an active advertisers file
 
     Args:
@@ -24,8 +29,12 @@ def filter_data(bucket_name:str, raw_data_file_path:str, act_adv_file_path:str, 
 
 
 def train_job(
-    model:str, bucket_name:str, curated_data_file_path:str, output_file_path:str, execution_date:str
-):
+    model: str,
+    bucket_name: str,
+    curated_data_file_path: str,
+    output_file_path: str,
+    execution_date: str,
+) -> None:
     """Create ranking order with the models
 
     Args:
@@ -33,7 +42,7 @@ def train_job(
         bucket_name (str): name of the raw data bucket
         curated_data_file_path (str): path to the curated data inside the bucket_name to be filtered
         output_file_path (str): output path inside the bucket_name
-        execution_date (str): _description_
+        execution_date (str): excecution_date from airflow dag
     """
     curated_data = S3utils.get_data(bucket_name, curated_data_file_path)
     model_instance = model(curated_data)
@@ -45,12 +54,25 @@ def train_job(
     S3utils.post_data(bucket_name, output_file_path, recommendation)
 
 
-def write_historic(bucket_name:str, recommendation_file_path:str, model_type:str, execution_date:str):
+def write_historic(
+    bucket_name: str,
+    recommendation_file_path: str,
+    model_type: str,
+    execution_date: str,
+) -> None:
+    """Write a file into the historic DDBB
+
+    Args:
+        bucket_name (str): name of the raw data bucket
+        recommendation_file_path (str): path to the recommendation data inside the bucket_name to be written
+        model_type (str): type of the model to be written, can be products or ctr
+        execution_date (str): excecution_date from airflow dag
+    """
     assert model_type in [
         "products",
         "ctr",
     ], 'model_type can only recieve "products" or "ctr"'
-    recommendation = S3utils.get_data(bucket_name:str, recommendation_file_path:str)
+    recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
 
     engine = psycopg2.connect(
         database="postgres",
@@ -112,7 +134,14 @@ def write_historic(bucket_name:str, recommendation_file_path:str, model_type:str
     print("Insert Success")
 
 
-def write_rds(bucket_name:str, recommendation_file_path:str, model_type:str):
+def write_rds(bucket_name: str, recommendation_file_path: str, model_type: str) -> None:
+    """Write a file into the latest DDBB
+
+    Args:
+        bucket_name (str): name of the raw data bucket
+        recommendation_file_path (str): path to the recommendation data inside the bucket_name to be written
+        model_type (str): type of the model to be written, can be products or ctr
+    """
     assert model_type in [
         "products",
         "ctr",
@@ -165,7 +194,12 @@ def write_rds(bucket_name:str, recommendation_file_path:str, model_type:str):
     print("Insert Success")
 
 
-def send_sns_notification(execution_date:str):
+def send_sns_notification(execution_date: str) -> None:
+    """Send an email notificating the workflow has succeded
+
+    Args:
+        execution_date (str): excecution_date from airflow dag
+    """
     # Specify the SNS topic ARN
     sns_topic_arn = "arn:aws:sns:us-east-2:169385451286:airflow_recsys"
 
