@@ -1,14 +1,8 @@
 import pandas as pd
-
 import psycopg2
 import sys
 import os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = f"{current_dir}/../../"
-sys.path.append(parent_dir)
-print(sys.path)
-from dags.src import S3utils
+from . import S3utils
 
 
 def query_latest_recommendation(

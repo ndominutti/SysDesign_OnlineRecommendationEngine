@@ -9,8 +9,6 @@ RUN apt install git -y
 
 RUN git clone https://github.com/ndominutti/SysDesign_OnlineRecommendationEngine.git
 
-#RUN cp -r SysDesign_OnlineRecommendationEngine /home/app
-
-RUN cd SysDesign_OnlineRecommendationEngine/api/
+RUN cp -r SysDesign_OnlineRecommendationEngine/api/app /home/app
 
 CMD ["uvicorn", "app.main:app", "--reload", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
