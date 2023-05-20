@@ -8,7 +8,15 @@ from airflow.hooks.base_hook import BaseHook
 import boto3
 
 
-def filter_data(bucket_name, raw_data_file_path, act_adv_file_path, output_file_path):
+def filter_data(bucket_name:str, raw_data_file_path:str, act_adv_file_path:str, output_file_path:str):
+    """Filter data given an active advertisers file
+
+    Args:
+        bucket_name (str): name of the raw data bucket
+        raw_data_file_path (str): path to the raw data inside the bucket_name to be filtered
+        act_adv_file_path (str): path to the active advertisers data inside the bucket_name to filter raw data
+        output_file_path (str): output path inside the bucket_name
+    """
     raw_data = S3utils.get_data(bucket_name, raw_data_file_path)
     act_adv = S3utils.get_data(bucket_name, act_adv_file_path)
     filtered_data = raw_data[raw_data["advertiser_id"].isin(act_adv.advertiser_id)]
@@ -16,8 +24,17 @@ def filter_data(bucket_name, raw_data_file_path, act_adv_file_path, output_file_
 
 
 def train_job(
-    model, bucket_name, curated_data_file_path, output_file_path, execution_date
+    model:str, bucket_name:str, curated_data_file_path:str, output_file_path:str, execution_date:str
 ):
+    """Create ranking order with the models
+
+    Args:
+        model (str): model type, can be product or ctr
+        bucket_name (str): name of the raw data bucket
+        curated_data_file_path (str): path to the curated data inside the bucket_name to be filtered
+        output_file_path (str): output path inside the bucket_name
+        execution_date (str): _description_
+    """
     curated_data = S3utils.get_data(bucket_name, curated_data_file_path)
     model_instance = model(curated_data)
     excecution_previous_date = str(
@@ -28,12 +45,12 @@ def train_job(
     S3utils.post_data(bucket_name, output_file_path, recommendation)
 
 
-def write_historic(bucket_name, recommendation_file_path, model_type, execution_date):
+def write_historic(bucket_name:str, recommendation_file_path:str, model_type:str, execution_date:str):
     assert model_type in [
         "products",
         "ctr",
     ], 'model_type can only recieve "products" or "ctr"'
-    recommendation = S3utils.get_data(bucket_name, recommendation_file_path)
+    recommendation = S3utils.get_data(bucket_name:str, recommendation_file_path:str)
 
     engine = psycopg2.connect(
         database="postgres",
@@ -95,7 +112,7 @@ def write_historic(bucket_name, recommendation_file_path, model_type, execution_
     print("Insert Success")
 
 
-def write_rds(bucket_name, recommendation_file_path, model_type):
+def write_rds(bucket_name:str, recommendation_file_path:str, model_type:str):
     assert model_type in [
         "products",
         "ctr",
@@ -148,7 +165,7 @@ def write_rds(bucket_name, recommendation_file_path, model_type):
     print("Insert Success")
 
 
-def send_sns_notification(execution_date):
+def send_sns_notification(execution_date:str):
     # Specify the SNS topic ARN
     sns_topic_arn = "arn:aws:sns:us-east-2:169385451286:airflow_recsys"
 
