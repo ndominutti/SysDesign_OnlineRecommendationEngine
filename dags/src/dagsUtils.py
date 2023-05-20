@@ -1,5 +1,5 @@
 import pandas as pd
-from . import S3utils
+import S3utils as S3utils
 import psycopg2
 from datetime import datetime, timedelta
 from airflow.operators.email_operator import EmailOperator
