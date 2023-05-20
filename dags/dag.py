@@ -29,9 +29,9 @@ from src.topctr import Topctr
 
 with DAG(
     dag_id="ad_recommender",
-    schedule_interval="43 20 * * *",
+    schedule_interval="10 15 * * *",
     start_date=datetime(2023, 5, 10),
-    catchup=True,
+    catchup=False,
 ) as dag:
     with TaskGroup(group_id="filter_data") as FilterJob:
         FilterAdvertiserData = PythonOperator(
