@@ -32,7 +32,7 @@ def query_latest_recommendation(
         return {
             "Error": "El advertiser ingresado no es válido o no existe en la base de datos"
         }
-    return {advertiser_id: dataframe["product"].values.tolist()}
+    return {"recommendations": dataframe["product"].values.tolist()}
 
 
 def query_historic_recommendation(
@@ -61,7 +61,7 @@ def query_historic_recommendation(
         }
     dataframe = dataframe.groupby("date").product.unique().to_dict()
     returnable = {k: list(v) for k, v in dataframe.items()}
-    return {advertiser_id: returnable}
+    return {"recommendations": returnable}
 
 
 def _stat_cantidades(dataframe: pd.DataFrame, column: str) -> pd.DataFrame:
