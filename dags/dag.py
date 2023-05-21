@@ -13,7 +13,6 @@ from airflow.utils.task_group import TaskGroup
 
 
 from src import dagsUtils
-from src import S3utils
 from src.topproduct import Topproduct
 from src.topctr import Topctr
 

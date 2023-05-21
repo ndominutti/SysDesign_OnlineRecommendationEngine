@@ -39,4 +39,4 @@ RUN cp -r SysDesign_OnlineRecommendationEngine/dags airflow/
 
 COPY script.sh .
 
-ENTRYPOINT ["/bin/bash", "./script.sh"]
+#ENTRYPOINT ["/bin/bash", "./script.sh"]
