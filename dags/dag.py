@@ -18,15 +18,6 @@ from src import dagsUtils
 from src.topproduct import Topproduct
 from src.topctr import Topctr
 
-# # Obtener la fecha actual
-# today = datetime.now()
-
-# # Restar 4 días
-# days_ago = today - timedelta(days=4)
-
-# # Formatear la fecha en el formato "año-mes-día"
-# date_str = days_ago.strftime('%Y-%m-%d')
-
 
 with DAG(
     dag_id="ad_recommender",
