@@ -7,9 +7,9 @@ app = FastAPI()
 
 engine = psycopg2.connect(
     database="postgres",
-    host=os.getenv("POSTGRES_USER"),
-    user=os.getenv("POSTGRES_PASS"),
-    password=os.getenv("POSTGRES_HOST"),
+    host=os.getenv("POSTGRES_HOST"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASS"),
     port=5432,
 )
 
