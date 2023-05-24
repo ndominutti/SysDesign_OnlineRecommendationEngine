@@ -7,6 +7,10 @@ RUN pip install -r requirements.txt
 RUN apt update
 RUN apt install git -y
 
+ARG POSTGRES_USER="placeholder"
+ARG POSTGRES_PASS="placeholder"
+ARG POSTGRES_HOST="placeholder"
+
 RUN git clone https://github.com/ndominutti/SysDesign_OnlineRecommendationEngine.git
 
 RUN cp -r SysDesign_OnlineRecommendationEngine/api/app /home/app

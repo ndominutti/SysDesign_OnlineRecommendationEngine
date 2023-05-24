@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 import psycopg2
 from . import APIUtils
+import os
 
 app = FastAPI()
 
 engine = psycopg2.connect(
     database="postgres",
-    host="db-airflow.c6z3l3m7uu0r.us-east-2.rds.amazonaws.com",
-    user="postgres_admin",
-    password="udesa856",
+    host=os.getenv("POSTGRES_USER"),
+    user=os.getenv("POSTGRES_PASS"),
+    password=os.getenv("POSTGRES_HOST"),
     port=5432,
 )
 
