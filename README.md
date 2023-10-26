@@ -1,9 +1,11 @@
-This repo was the final deliverable from an advanced programming lecture in Universidad de San Andres' MSc in Data Science.
+# SysDesign_OnlineRecommendationEngine
 
-Here you will find an example of a working ML-System, including:
-<ul>
-    <li> ETL & recommendation process (/dags)
-    <li> recommendations serving (/api)
-</ul>
+This repository contains the implementation of a web-ads recommendation engine ML system. The process runs every day at midnight, generating recommendations for each user, storing them in AWS RDS, and retrieving them when a user enters the web.
 
-To get a more deeply sense of the aim and the technology used I recommend you to visit this <a href=''>link</a> to a medium post with a soft explanation.
+The processes involved are:
+
+- ETL & Recommendation (code stored in /dags)
+- Recommendations Serving (code stored in /api)
+
+For a more in-depth understanding of the purpose and the technology employed, I recommend visiting this [Medium post](https://ndominutti.medium.com/ml-systems-a-practical-introduction-798dbdfe4a16), which provides a detailed explanation.
+
